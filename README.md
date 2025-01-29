@@ -1,6 +1,6 @@
 # 🌀 Cyberpunk ASCII Art Generator
 
-Try it out [here](https://simulated-name-art.replit.app/)
+Try out the live site: [here]([https://simulated-name-art.replit.app/](https://sz-asc-art-sashazabegalin.replit.app/))
 
 A cyberpunk-inspired ASCII art display featuring animated matrix rain and glowing 3D text effects. Built with Python.
 
