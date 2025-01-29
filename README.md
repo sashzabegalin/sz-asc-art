@@ -1,8 +1,8 @@
 # 🌀 Cyberpunk ASCII Art Generator
 
-A mesmerizing cyberpunk-inspired ASCII art display featuring animated matrix rain and glowing 3D text effects. Built with Python and Tkinter.
+A cyberpunk-inspired ASCII art display featuring animated matrix rain and glowing 3D text effects. Built with Python.
 
-![Cyberpunk ASCII Art Demo](screenshot.png)
+![Cyberpunk ASCII Art Demo](sz-screenshot.png)
 
 ## ✨ Features
 
