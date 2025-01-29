@@ -1,5 +1,7 @@
 # 🌀 Cyberpunk ASCII Art Generator
 
+Try it out [here](https://simulated-name-art.replit.app/)
+
 A cyberpunk-inspired ASCII art display featuring animated matrix rain and glowing 3D text effects. Built with Python.
 
 ![Cyberpunk ASCII Art Demo](sz-screenshot.png)
