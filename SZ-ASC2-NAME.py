@@ -8,7 +8,7 @@ import colorsys
 class CyberpunkNameDisplay:
     def __init__(self, root):
         self.root = root
-        self.root.title("Cyberpunk Name Art")
+        self.root.title("S-yberpunk Name Art")
         self.root.configure(bg='black')
         
         # Set window size and position it center screen

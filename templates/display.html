@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ site_title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+</head>
+<body style="background: {{ settings.bg_color }};">
+    <div id="art-container">
+        <div class="name-wrapper">
+            <pre id="ascii-art">
+{% for line in settings.ascii_lines %}<span class="ascii-line">{{ line }}</span>
+{% endfor %}</pre>
+        </div>
+    </div>
+    
+    <!-- Back button -->
+    <div class="back-container">
+        <a href="/" class="back-btn">GENERATE NEW ART</a>
+    </div>
+
+    <script>
+        const config = {
+            matrixChars: `{{ settings.matrix_chars }}`.split(''),
+            matrixColor: '{{ settings.matrix_color }}',
+            hologramColor: '{{ settings.hologram_color }}',
+            mainColor: '{{ settings.main_color }}',
+            bgColor: '{{ settings.bg_color }}'
+        };
+
+        let drops = [];
+
+        function setup() {
+            const canvas = createCanvas(windowWidth, windowHeight);
+            canvas.style('z-index', '-1'); // Ensure behind
+            frameRate(30);
+            textSize(14);
+            textFont('Arial');
+            
+            // Initialize matrix drops with proper character selection
+            for(let i = 0; i < 70; i++) {
+                drops.push({
+                    x: random(width),
+                    y: random(-height, 0),
+                    speed: random(2, 6),
+                    length: Math.floor(random(15, 35)),
+                    chars: Array(20).fill().map(() => random(config.matrixChars))
+                });
+            }
+        }
+
+        function draw() {
+            background(config.bgColor + '50'); // Semi-transparent background
+            
+            // Draw matrix rain with proper character handling
+            drops.forEach(drop => {
+                drop.y += drop.speed;
+                
+                if(drop.y > height) {
+                    drop.y = random(-200, -100);
+                    drop.x = random(width);
+                    drop.chars = Array(20).fill().map(() => random(config.matrixChars));
+                }
+                
+                for(let i = 0; i < drop.length; i++) {
+                    const yPos = drop.y - (i * 20);
+                    if(yPos < height && yPos > 0) {
+                        const alpha = Math.floor(255 * (1 - i/drop.length));
+                        fill(config.matrixColor + alpha.toString(16).padStart(2, '0'));
+                        text(drop.chars[i % drop.chars.length], drop.x, yPos);
+                    }
+                }
+            });
+
+            // Fixed hologram lines that span full screen
+            stroke(config.hologramColor);
+            const cols = Math.ceil(width / 60);
+            const rows = Math.ceil(height / 60);
+            for(let i = 0; i < cols; i++) {
+                line(i * 60, 0, i * 60, height);
+            }
+            for(let i = 0; i < rows; i++) {
+                line(0, i * 60, width, i * 60);
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+    </script>
+    
+    <style>
+        .name-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2147483647;
+            pointer-events: none;
+        }
+        
+        #art-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2147483647;
+            pointer-events: none;
+            text-align: center;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #ascii-art {
+            background: transparent !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .ascii-line {
+            color: {{ settings.main_color }};
+            text-shadow: 
+                /* Updated 3D effect for light background */
+                2px 2px 0 rgba(255, 255, 255, 0.8),
+                4px 4px 0 rgba(255, 255, 255, 0.6),
+                6px 6px 0 rgba(255, 255, 255, 0.4),
+                8px 8px 0 rgba(255, 255, 255, 0.2),
+                /* Blue glow */
+                0 0 10px {{ settings.main_color }}30,
+                0 0 20px {{ settings.main_color }}20,
+                0 0 30px {{ settings.main_color }}10;
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: 900 !important;
+            position: relative;
+            z-index: 1001;
+            transform: perspective(500px) rotateX(10deg);
+            animation: glitch 1.5s infinite, float 3s ease-in-out infinite !important;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: perspective(500px) rotateX(10deg) translateY(0); }
+            50% { transform: perspective(500px) rotateX(10deg) translateY(-5px); }
+        }
+
+        @keyframes glitch {
+            0%, 70% {
+                transform: translate(0,0) skew(0);
+                text-shadow: 
+                    2px 2px 0 rgba(255,255,255,0.5),
+                    -2px -2px 0 {{ settings.main_color }}80;
+            }
+            2% {
+                transform: translate(3px,-2px) skew(-3deg);
+                text-shadow: 
+                    4px 4px 0 {{ settings.matrix_color }}cc,
+                    -4px -4px 0 {{ settings.matrix_color }}80;
+                clip-path: inset(20% 0 30% 0);
+            }
+            4% {
+                transform: translate(-2px,3px) skew(5deg);
+                text-shadow: 
+                    4px 4px 0 {{ settings.matrix_color }}cc,
+                    -4px -4px 0 {{ settings.matrix_color }}80;
+            }
+            6% {
+                transform: translate(5px,-5px) skew(-8deg);
+                text-shadow: 
+                    4px 4px 0 {{ settings.matrix_color }}cc,
+                    -4px -4px 0 {{ settings.matrix_color }}80;
+                clip-path: inset(30% 0 10% 0);
+            }
+            8%, 100% {
+                transform: translate(0,0) skew(0);
+            }
+        }
+    </style>
+</body>
+</html> 

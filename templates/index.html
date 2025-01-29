@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ site_title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="config-panel">
+        <h1>{{ site_title }}</h1>
+        <form method="POST">
+            <div class="form-group">
+                <label>Your Name:</label>
+                <input type="text" name="name" value="{{ defaults.name }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Matrix Language:</label>
+                <select name="matrix_chars" class="language-select" required>
+                    {% for lang, chars in languages %}
+                    <option value="{{ chars }}" {% if defaults.matrix_chars == chars %}selected{% endif %}>
+                        {{ lang }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="color-section">
+                <div class="color-pickers">
+                    <div class="form-group">
+                        <label>Main Color:</label>
+                        <input type="color" name="main_color" value="{{ defaults.main_color }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Matrix Color:</label>
+                        <input type="color" name="matrix_color" value="{{ defaults.matrix_color }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Background:</label>
+                        <input type="color" name="bg_color" value="{{ defaults.bg_color }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Hologram Lines:</label>
+                        <input type="color" name="hologram_color" value="{{ defaults.hologram_color }}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit">Generate Art</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html> 
